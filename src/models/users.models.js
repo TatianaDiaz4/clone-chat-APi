@@ -1,7 +1,8 @@
-const { DataTypes } = require('sequelize');
-const db = require('../utils/database');
+const { DataTypes } = require("sequelize");
 
-const Users = db.define('users', {
+const db = require("../utils/database");
+
+const Users = db.define("users", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -21,19 +22,18 @@ const Users = db.define('users', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
-  profileImage: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
+  profileImage:{
+    type: DataTypes.STRING
   },
   phone: {
     type: DataTypes.STRING,
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  }
 });
 
-module.exports = Users;
+module.exports = Users
