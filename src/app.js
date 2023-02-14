@@ -1,10 +1,24 @@
 const express = require('express')
-const config = require('../config')
-const db = require('./utils/database')
 
 const responseHandlers = require('./utils/handleResponses')
+const db = require('./utils/database')
+const initModels = require('./models/initModels')
+
+const userRouter = require('./users/users.router')
 
 const app = express()
+
+app.use(express.json())
+
+db.authenticate()
+    .then(() => console.log('Database authenticated'))
+    .catch(err => console.log(err))
+
+db.sync()
+    .then(() => console.log('Database Synced'))
+    .catch(err => console.log(err))
+
+initModels()
 
 app.get('/', (req, res) => {
     responseHandlers.success({
@@ -17,6 +31,8 @@ app.get('/', (req, res) => {
         }
     })
 })
+
+app.use('/api/v1/users', userRouter)
 
 //? Esta debe ser la ultima ruta en mi app
 app.use('*', (req, res)=> {
