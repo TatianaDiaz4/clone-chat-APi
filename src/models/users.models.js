@@ -32,7 +32,7 @@ const Users = db.define('users', {
     defaultValue: true,
   },
   phone: {
-    type: DataTypes.STRING(16),
+    type: DataTypes.STRING,
   },
 });
 
