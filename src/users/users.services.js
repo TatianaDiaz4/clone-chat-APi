@@ -1,216 +1,166 @@
-const userControllers = require("./users.controllers");
-const { success, error } = require("../utils/handleResponses");
+const usersControllers = require('./users.controllers')
+const responses = require('../utils/handleResponses')
 
 const getAllUsers = (req, res) => {
-  userControllers
-    .findAllUsers()
-    .then((data) => {
-      success({
-        res,
-        data,
-        status: 200,
-        message: "Request succesful",
-      });
-    })
-    .catch((err) => {
-      error({
-        res,
-        data: err,
-        status: 400,
-        message: "An error occurred while trying to display all users",
-      });
-    });
-};
+    usersControllers.findAllUser()
+        .then(data => {
+            responses.success({
+                    status: 200,
+                    data: data,
+                    message: 'Getting all Users',
+                    res
+                })
+        })
+        .catch(err => {
+            responses.error({
+                    status: 400,
+                    data: err,
+                    message: 'Something bad getting all users',
+                    res
+                })
+        })
+}
 
-const getUserById = (req, res) => {
-  const id = req.params.id;
-
-  userControllers
-    .findUserById(id)
-    .then((data) => {
-      if (data) {
-        success({
-          res,
-          data,
-          status: 200,
-          message: "Request succesful",
-        });
-      } else {
-        error({
-          res,
-          data,
-          status: 404,
-          message: "User not found",
-        });
-      }
-    })
-    .catch((err) => {
-      error({
-        res,
-        data,
-        status: 400,
-        message: "The request could not be completed",
-      });
-    });
-};
+const getUserById = (req ,res) => {
+    const id = req.params.id 
+    usersControllers.findUserById(id)
+        .then(data => {
+            if(data){
+                responses.success({
+                    status: 200,
+                    data,
+                    message: `Getting User with id: ${id}`,
+                    res
+                })
+            } else {
+                responses.error({
+                    status: 404,
+                    message: `User with ID: ${id}, not found`,
+                    res
+                })
+            }
+        })
+        .catch(err => {
+            responses.error({
+                status: 400,
+                data: err,
+                message: 'Something bad getting the user',
+                res
+            })
+        })
+}
 
 const postNewUser = (req, res) => {
-  const userObj = req.body;
-  userControllers
-    .createNewUser(userObj)
-    .then((data) => {
-      success({
-        res,
-        data,
-        status: 201,
-        message: "User created",
-      });
-    })
-    .catch((err) => {
-      error({
-        res,
-        data: err,
-        status: 400,
-        message: "Failed to create user",
-        fields: {
-          firstName: "String",
-          lastName: "String",
-          email: "example@maildomain.com (Unique value)",
-          password: "String",
-          profileImage: "String (Optional value)",
-          isActive: "Boolean (Default value: true)",
-          phone: "String (max: 16 characters)",
-        },
-      });
-    });
-};
-
-const deleteUser = (req, res) => {
-  const id = req.params.id;
-
-  userControllers
-    .deleteUser(id)
-    .then((data) => {
-      if (data) {
-        success({
-          res,
-          data,
-          status: 204,
-          message: "User has been deleted",
-        });
-      } else {
-        error({
-          res,
-          data,
-          status: 404,
-          message: "User not found",
-        });
-      }
-    })
-    .catch((err) => {
-      error({
-        res,
-        data,
-        status: 400,
-        message: "The request could not be completed",
-      });
-    });
-};
+    const userObj = req.body
+    usersControllers.createNewUser(userObj)
+        .then(data => {
+            responses.success({
+                status: 201,
+                data,
+                message: `User created succesfully with id: ${data.id}`,
+                res
+            })
+        })
+        .catch(err => {
+            responses.error({
+                status: 400,
+                data: err,
+                message: 'Error ocurred trying to create a new user',
+                res,
+                fields: {
+                    firstName : 'String',
+                    lastName : 'String',
+                    email: 'example@example.com',
+                    password: 'String',
+                    profileImage: 'example.com/image.png',
+                    phone : '+52 1234 123 123'
+                }
+            })
+        })
+}
 
 const patchUser = (req, res) => {
-  const id = req.params.id;
-  const userObj = req.body;
-  userControllers
-    .updateUser(id, userObj)
-    .then((data) => {
-      if (data) {
-        success({
-          res,
-          data,
-          status: 200,
-          message: `User with id: ${id} updated succesfully`,
-        });
-      } else {
-        error({
-          res,
-          data,
-          status: 404,
-          message: "User not found",
-        });
-      }
-    })
-    .catch((err) => {
-      error({
-        res,
-        data,
-        status: 400,
-        message: "The request could not be completed",
-      });
-    });
-};
+    const id = req.params.id 
+    const userObj = req.body 
 
-const putUser = (req, res) => {
-  const id = req.params.id;
-  const userObj = req.body;
+    usersControllers.updateUser(id, userObj)
+        .then(data => {
+            if(data){
+                responses.success({
+                    status: 200,
+                    data, 
+                    message: `User with id: ${id} modified successfully`,
+                    res
+                })
+            } else {
+                responses.error({
+                    status: 404,
+                    message: `The user with ID ${id} not found`,
+                    res,
+                    fields: {
+                        firstName : 'String',
+                        lastName : 'String',
+                        email: 'example@example.com',
+                        password: 'String',
+                        profileImage: 'example.com/image.png',
+                        phone : '+52 1234 123 123'
+                    }
+                })
+            }
+        })
+        .catch(err => {
+            responses.error({
+                status: 400,
+                data: err,
+                message: `Error ocurred trying to update user with id ${id}`,
+                res,
+                fields: {
+                    firstName : 'String',
+                    lastName : 'String',
+                    email: 'example@example.com',
+                    password: 'String',
+                    profileImage: 'example.com/image.png',
+                    phone : '+52 1234 123 123'
+                }
+            })
+        })
+}
 
-  if (
-    !userObj.firstName ||
-    !userObj.lastName ||
-    !userObj.email ||
-    !userObj.password ||
-    !userObj.phone
-  ) {
-    return error({
-      res,
-      data: err,
-      status: 400,
-      message: "Failed to create user",
-      fields: {
-        firstName: "String",
-        lastName: "String",
-        email: "example@maildomain.com (Unique value)",
-        password: "String",
-        profileImage: "String (Optional value)",
-        isActive: "Boolean (Default value: true)",
-        phone: "String (max: 16 characters)",
-      },
-    });
-  }
+const deleteUser = (req, res) => {
+    const id = req.params.id 
 
-  userControllers
-    .updateUser(id, userObj)
-    .then((data) => {
-      if (data) {
-        success({
-          res,
-          data,
-          status: 200,
-          message: `User with id: ${id} updated succesfully`,
-        });
-      } else {
-        error({
-          res,
-          data,
-          status: 404,
-          message: "User not found",
-        });
-      }
-    })
-    .catch((err) => {
-      error({
-        res,
-        data,
-        status: 400,
-        message: "The request could not be completed",
-      });
-    });
-};
+    usersControllers.deleteUser(id)
+        .then(data => {
+            if(data){
+                responses.success({
+                    status: 200,
+                    data, 
+                    message: `User with id: ${id} deleted successfully`,
+                    res
+                })
+            } else {
+                responses.error({
+                    status: 404,
+                    data: err,
+                    message: `The user with ID ${id} not found`,
+                    res
+                })
+            }
+        })
+        .catch(err => {
+            responses.error({
+                status: 400,
+                data: err,
+                message: `Error ocurred trying to delete user with id ${id}`,
+                res
+            })
+        })
+}
 
 module.exports = {
-  getAllUsers,
-  getUserById,
-  postNewUser,
-  deleteUser,
-  patchUser,
-  putUser,
-};
+    getAllUsers,
+    getUserById,
+    postNewUser,
+    patchUser,
+    deleteUser
+}
