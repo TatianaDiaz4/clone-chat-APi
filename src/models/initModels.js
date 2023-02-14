@@ -4,8 +4,9 @@ const Messages = require('./messages.models');
 const Participants = require('./participants.models');
 
 const initModels = () => {
-  Messages.belongsTo(Participants);
-  Participants.hasMany(Messages);
+  
+  Users.hasMany(Participants)
+  Participants.belongsTo(Users);
 
   Participants.belongsTo(Conversations);
   Conversations.hasMany(Participants);
