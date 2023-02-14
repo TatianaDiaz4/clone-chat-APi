@@ -1,29 +1,29 @@
-const { DataTypes } = require('sequelize');
-const db = require('../utils/database');
+const { DataTypes } = require("sequelize");
 
-const Participants = require('./participants.models');
+const db = require("../utils/database");
+const Participants = require("./participants.models");
 
-const Messages = db.define('messages', {
+const Messages = db.define("messages", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
   },
   content: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   participantId: {
     type: DataTypes.UUID,
-    allowNull: false,
+    allowNull:false,
     references: {
-      model: Participants,
-      key: 'id',
-    },
+        model: Participants,
+        key: 'id'
+    }
   },
   status: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
+    defaultValue: 'Sent'
+  }
 });
 
-module.exports = Messages;
+module.exports = Messages
